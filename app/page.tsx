@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Formulario from "./components/Formulario";
+import AuthForm from "./components/auth/AuthForm";
 
 export default function Home() {
   return (
@@ -26,7 +26,8 @@ export default function Home() {
           </h1>
           {/* El formulario ahora estará más cerca del título */}
           <div className="-mt-4"> 
-            <Formulario />
+           
+            <AuthForm />
           </div>
         </div>
       </main>
