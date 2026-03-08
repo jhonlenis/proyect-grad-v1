@@ -1,64 +1,85 @@
+"use client";
+
 import { useState, ChangeEvent, FormEvent } from "react";
 
 interface LoginData {
-  email: string;
+  correo: string;
   password: string;
 }
 
 export default function LoginForm() {
   const [formData, setFormData] = useState<LoginData>({
-    email: "",
+    correo: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    console.log(data);
+      if (res.ok) {
+        alert(`¡Bienvenido , ${data.user.nombres || 'Aprendiz'}!`);
+        // Aquí podrías redirigir: router.push('/dashboard')
+      } else {
+        alert(data.error || "Error al iniciar sesión");
+      }
+    } catch (error) {
+      alert("Error de conexión con el servidor");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="w-full max-w-md mx-auto py-6">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <div className="w-full">
+          <input
+            type="text"
+            name="correo"
+            placeholder="Correo electrónico"
+            value={formData.correo}
+            onChange={handleChange}
+            className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-2 border-emerald-100 focus:border-emerald-500 focus:bg-white text-black outline-none transition-all placeholder:text-gray-400"
+            required
+          />
+        </div>
 
-      <input
-        type="email"
-        name="email"
-        placeholder="Correo electrónico"
-        onChange={handleChange}
-        required
-      />
+        <div className="w-full">
+          <input
+            type="password"
+            name="password"
+            placeholder="Contraseña"
+            value={formData.password}
+            onChange={handleChange}
+            className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-2 border-emerald-100 focus:border-emerald-500 focus:bg-white text-black outline-none transition-all placeholder:text-gray-400"
+            required
+          />
+        </div>
 
-      <input
-        type="password"
-        name="password"
-        placeholder="Contraseña"
-        onChange={handleChange}
-        required
-      />
-
-      <button type="submit">
-        Iniciar Sesión
-      </button>
-
-    </form>
+        <button
+          type="submit"
+          disabled={loading}
+          className={`w-full py-4 ${loading ? 'bg-gray-400' : 'bg-emerald-600 hover:bg-emerald-700'} text-white font-bold rounded-2xl shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition-all uppercase tracking-widest mt-2`}
+        >
+          {loading ? "Cargando..." : "Iniciar Sesión"}
+        </button>
+      </form>
+    </div>
   );
 }

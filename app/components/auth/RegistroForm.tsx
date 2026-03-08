@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, ChangeEvent, FormEvent } from "react";
 
 interface RegisterData {
@@ -19,7 +21,6 @@ export default function RegisterForm() {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -28,67 +29,83 @@ export default function RegisterForm() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const res = await fetch("/api/registro", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     });
-
     const data = await res.json();
-
     console.log(data);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="w-full max-w-lg mx-auto py-6">
+      {/* Título en Negro */}
+    
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {/* Fila: Nombres y Apellidos */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input
+            type="text"
+            name="nombres"
+            placeholder="Nombres"
+            value={formData.nombres}
+            onChange={handleChange}
+            className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-2 border-emerald-100 focus:border-emerald-500 focus:bg-white text-black outline-none transition-all placeholder:text-gray-400"
+            required
+          />
+          <input
+            type="text"
+            name="apellidos"
+            placeholder="Apellidos"
+            value={formData.apellidos}
+            onChange={handleChange}
+            className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-2 border-emerald-100 focus:border-emerald-500 focus:bg-white text-black outline-none transition-all placeholder:text-gray-400"
+            required
+          />
+        </div>
 
-      <input
-        type="text"
-        name="nombres"
-        placeholder="Nombre"
-        onChange={handleChange}
-        required
-      />
+        {/* Campo Documento */}
+        <input
+          type="text"
+          name="documento"
+          placeholder="Documento de identidad"
+          value={formData.documento}
+          onChange={handleChange}
+          className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-2 border-emerald-100 focus:border-emerald-500 focus:bg-white text-black outline-none transition-all placeholder:text-gray-400"
+          required
+        />
 
-      <input
-        type="text"
-        name="apellidos"
-        placeholder="Apellidos"
-        onChange={handleChange}
-        required
-      />
+        {/* Campo Correo */}
+        <input
+          type="email"
+          name="email"
+          placeholder="Correo electrónico"
+          value={formData.email}
+          onChange={handleChange}
+          className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-2 border-emerald-100 focus:border-emerald-500 focus:bg-white text-black outline-none transition-all placeholder:text-gray-400"
+          required
+        />
 
-      <input
-        type="email"
-        name="email"
-        placeholder="Correo"
-        onChange={handleChange}
-        required
-      />
+        {/* Campo Contraseña */}
+        <input
+          type="password"
+          name="password"
+          placeholder="Contraseña"
+          value={formData.password}
+          onChange={handleChange}
+          className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-2 border-emerald-100 focus:border-emerald-500 focus:bg-white text-black outline-none transition-all placeholder:text-gray-400"
+          required
+        />
 
-      <input
-        type="text"
-        name="documento"
-        placeholder="Documento"
-        onChange={handleChange}
-        required
-      />
-
-      <input
-        type="password"
-        name="password"
-        placeholder="Contraseña"
-        onChange={handleChange}
-        required
-      />
-
-      <button type="submit">
-        Crear Cuenta
-      </button>
-
-    </form>
+        {/* Botón de Acción */}
+        <button
+          type="submit"
+          className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition-all uppercase tracking-widest mt-4"
+        >
+          Crear Cuenta
+        </button>
+      </form>
+    </div>
   );
 }
