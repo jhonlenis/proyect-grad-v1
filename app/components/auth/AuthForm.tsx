@@ -25,7 +25,7 @@ export default function AuthForm() {
           <div className="mt-8 text-center">
             <button
               onClick={() => setIsLogin(!isLogin)}
-              className="text-emerald-700 font-semibold hover:text-emerald-500 underline"
+              className="text-emerald-700 font-semibold hover:text-emerald-700 transition-colors text-sm border-b-2 border-emerald-500 pb-1"
             >
               {isLogin
                 ? "¿No tienes cuenta? Regístrate"
