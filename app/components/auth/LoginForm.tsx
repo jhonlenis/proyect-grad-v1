@@ -13,6 +13,8 @@ export default function LoginForm() {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  // Nuevo estado para los mensajes en pantalla
+  const [status, setStatus] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -22,6 +24,7 @@ export default function LoginForm() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    setStatus(null); // Limpiar mensajes anteriores
 
     try {
       const res = await fetch("/api/login", {
@@ -33,13 +36,25 @@ export default function LoginForm() {
       const data = await res.json();
 
       if (res.ok) {
-        alert(`¡Bienvenido , ${data.user.nombres || 'Aprendiz'}!`);
-        // Aquí podrías redirigir: router.push('/dashboard')
+        // En lugar de alert(), usamos setStatus
+        setStatus({ 
+          type: 'success', 
+          text: `¡Bienvenido, ${data.user.nombres || 'Aprendiz'}!` 
+        });
+        
+        // Opcional: Redirigir después de 2 segundos
+        // setTimeout(() => router.push('/dashboard'), 2000);
       } else {
-        alert(data.error || "Error al iniciar sesión");
+        setStatus({ 
+          type: 'error', 
+          text: data.error || "Credenciales incorrectas" 
+        });
       }
     } catch (error) {
-      alert("Error de conexión con el servidor");
+      setStatus({ 
+        type: 'error', 
+        text: "Error de conexión con el servidor" 
+      });
     } finally {
       setLoading(false);
     }
@@ -48,6 +63,18 @@ export default function LoginForm() {
   return (
     <div className="w-full max-w-md mx-auto py-6">
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        
+        {/* Renderizado condicional del mensaje */}
+        {status && (
+          <div className={`p-4 rounded-xl text-sm font-bold text-center animate-bounce ${
+            status.type === 'success' 
+              ? 'bg-green-100 text-green-700 border border-green-200' 
+              : 'bg-red-100 text-red-700 border border-red-200'
+          }`}>
+            {status.text}
+          </div>
+        )}
+
         <div className="w-full">
           <input
             type="text"
