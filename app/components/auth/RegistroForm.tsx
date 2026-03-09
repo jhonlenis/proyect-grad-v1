@@ -19,7 +19,7 @@ export default function RegisterForm() {
     password: "",
   });
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -41,7 +41,7 @@ export default function RegisterForm() {
   return (
     <div className="w-full max-w-lg mx-auto py-6">
       {/* Título en Negro */}
-    
+
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {/* Fila: Nombres y Apellidos */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -66,6 +66,22 @@ export default function RegisterForm() {
         </div>
 
         {/* Campo Documento */}
+        <select
+          name="documento"
+          value={formData.documento}
+          onChange={handleChange}
+          className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-2 border-emerald-100 focus:border-emerald-500 focus:bg-white text-black outline-none transition-all cursor-pointer appearance-none"
+          required
+        >
+          <option value="" disabled selected className="text-gray-400">
+            Selecciona tipo de documento
+          </option>
+          <option value="CC">Cédula de Ciudadanía</option>
+          <option value="TI">Tarjeta de Identidad</option>
+          <option value="CE">Cédula de Extranjería</option>
+          <option value="pasaporte">Pasaporte</option>
+          <option value="PPT">Permiso de Protección Temporal</option>
+        </select>
         <input
           type="text"
           name="documento"

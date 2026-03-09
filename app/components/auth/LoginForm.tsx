@@ -4,19 +4,21 @@ import { useState, ChangeEvent, FormEvent } from "react";
 
 interface LoginData {
   correo: string;
+  documento: string;
   password: string;
 }
 
 export default function LoginForm() {
   const [formData, setFormData] = useState<LoginData>({
     correo: "",
+    documento: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
   // Nuevo estado para los mensajes en pantalla
   const [status, setStatus] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -81,6 +83,37 @@ export default function LoginForm() {
             name="correo"
             placeholder="Correo electrónico"
             value={formData.correo}
+            onChange={handleChange}
+            className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-2 border-emerald-100 focus:border-emerald-500 focus:bg-white text-black outline-none transition-all placeholder:text-gray-400"
+            required
+          />
+        </div>
+
+        <div>
+          <select
+          name="documento"
+          value={formData.documento}
+          onChange={handleChange}
+          className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-2 border-emerald-100 focus:border-emerald-500 focus:bg-white text-black outline-none transition-all cursor-pointer appearance-none"
+          required
+        >
+          <option value="" disabled selected className="text-gray-400">
+            Selecciona tipo de documento
+          </option>
+          <option value="CC">Cédula de Ciudadanía</option>
+          <option value="TI">Tarjeta de Identidad</option>
+          <option value="CE">Cédula de Extranjería</option>
+          <option value="pasaporte">Pasaporte</option>
+          <option value="PPT">Permiso de Protección Temporal</option>
+        </select>
+        </div>
+
+        <div>
+          <input
+            type="text"
+            name="documento"
+            placeholder="Número de documento"
+            value={formData.documento}
             onChange={handleChange}
             className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-2 border-emerald-100 focus:border-emerald-500 focus:bg-white text-black outline-none transition-all placeholder:text-gray-400"
             required
