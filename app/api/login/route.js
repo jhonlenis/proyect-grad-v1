@@ -1,21 +1,33 @@
 import db from "@/lib/db";
+import bcrypt from "bcrypt"; // Importante para comparar contraseñas encriptadas
 
 export async function POST(request) {
     try {
-        const { correo, password } = await request.json();
+        const { correo, tipo_documento, numero_documento, password } = await request.json();
 
-        // Buscamos al usuario por su email
-        // IMPORTANTE: En producción, usa bcrypt.compare() para la contraseña
+        // 1. Buscamos al usuario por correo y documentos (filtros únicos)
+        // No metemos la password en el WHERE porque está hasheada
         const [rows] = await db.query(
-            "SELECT * FROM usuarios WHERE correo = ? AND password = ?", 
-            [correo, password]
+            "SELECT * FROM usuarios WHERE correo = ? AND tipo_documento = ? AND numero_documento = ?", 
+            [correo, tipo_documento, numero_documento]
         );
 
-        const usuarios = rows;
+        if (rows.length === 0) {
+            return new Response(JSON.stringify({ 
+                error: "Usuario no encontrado o datos incorrectos" 
+            }), { 
+                status: 401,
+                headers: { "Content-Type": "application/json" }
+            });
+        }
 
-        if (usuarios.length > 0) {
-            const user = usuarios[0];
-            // No devolvemos la contraseña al frontend por seguridad
+        const user = rows[0];
+
+        // 2. Comparamos la contraseña ingresada con el hash de la base de datos
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+        if (isPasswordCorrect) {
+            // 3. Login exitoso: Quitamos la password del objeto antes de enviar al front
             const { password: _, ...userWithoutPassword } = user;
 
             return new Response(JSON.stringify({ 
@@ -26,13 +38,15 @@ export async function POST(request) {
                 headers: { "Content-Type": "application/json" }
             });
         } else {
+            // 4. Contraseña incorrecta
             return new Response(JSON.stringify({ 
-                error: "Credenciales incorrectas" 
+                error: "Contraseña incorrecta" 
             }), { 
                 status: 401,
                 headers: { "Content-Type": "application/json" }
             });
         }
+
     } catch (error) {
         console.error("Error en el login:", error);
         return new Response(JSON.stringify({ 
