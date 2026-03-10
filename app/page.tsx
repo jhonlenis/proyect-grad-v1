@@ -2,6 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link"; // Importamos Link para la navegación
+import andres from "@/public/andres.jpeg"; // Asegúrate de tener esta imagen en tu proyecto
+import jhon from "@/public/jhon.jpeg"; // Asegúrate de tener esta imagen en tu proyecto
+import mariana from "@/public/mariana.jpeg"; // Asegúrate de tener esta imagen en tu proyecto
 
 export default function Home() {
   return (
@@ -25,15 +28,16 @@ export default function Home() {
           ¿Qué es SENA a un Clic?
         </h2>
         <p className="text-lg text-gray-700 leading-relaxed mb-8">
-          Somos una iniciativa tecnológica dedicada a centralizar y simplificar la experiencia 
-          educativa del aprendiz. Nuestra plataforma ofrece un acceso directo a servicios 
-          institucionales, optimizando la gestión de información.
+          SENA A UN CLIC es una plataforma de gestión educativa nacida de la necesidad de centralizar, 
+          simplificar y asegurar el acceso a la formación profesional integral. No es solo un portal de entrada; es 
+          una herramienta tecnológica robusta que busca eliminar la burocracia digital para el aprendiz 
+          moderno.
         </p>
         
         {/* BOTÓN QUE REDIRECCIONA AL LOGIN */}
         <Link href="/login">
           <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-full font-bold transition-all shadow-lg active:scale-95">
-            Empezar ahora / Iniciar Sesión
+            Comienza un viaje 🎓
           </button>
         </Link>
       </section>
@@ -46,40 +50,37 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* INTEGRANTE 1 */}
             <div className="flex flex-col items-center p-6 bg-gray-50 rounded-[2rem] border border-emerald-50 shadow-sm">
-              <div className="w-24 h-24 bg-emerald-100 rounded-full mb-4 flex items-center justify-center border-2 border-emerald-500">
-                <span className="text-emerald-700 font-bold italic text-xs">Foto Aquí</span>
+              <div className="w-24 h-24 bg-emerald-100 rounded-full mb-4 flex items-center justify-center border-2 border-emerald-500 overflow-hidden">
+                <Image src={andres} alt="Andres" className="w-full h-full object-cover" />
               </div>
-              <h3 className="font-bold text-xl">Integrante 1</h3>
-              <p className="text-emerald-600 text-sm font-semibold mb-2">Desarrollador Fullstack</p>
+              <h3 className="font-bold text-xl">Juan Andres jaramillo Garcia</h3>
+              <p className="text-emerald-600 text-sm font-semibold mb-2">Desarrollador backend</p>
               <div className="flex gap-2">
-                 <a href="#" className="text-emerald-600 hover:underline text-xs">LinkedIn</a>
-                 <a href="#" className="text-emerald-600 hover:underline text-xs">GitHub</a>
+                 <a href="https://www.instagram.com/andreg_190/" className="text-emerald-600 hover:underline text-xs">Instragram</a>
               </div>
             </div>
 
             {/* INTEGRANTE 2 */}
             <div className="flex flex-col items-center p-6 bg-gray-50 rounded-[2rem] border border-emerald-50 shadow-sm">
-              <div className="w-24 h-24 bg-emerald-100 rounded-full mb-4 flex items-center justify-center border-2 border-emerald-500">
-                <span className="text-emerald-700 font-bold italic text-xs">Foto Aquí</span>
+              <div className="w-24 h-24 bg-emerald-100 rounded-full mb-4 flex items-center justify-center border-2 border-emerald-500 overflow-hidden">
+                <Image src={jhon} alt="Jhon" className="w-full h-full object-cover" />
               </div>
-              <h3 className="font-bold text-xl">Integrante 2</h3>
-              <p className="text-emerald-600 text-sm font-semibold mb-2">Diseño UI/UX</p>
+              <h3 className="font-bold text-xl">Jhon Alexander Lenis Holguin</h3>
+              <p className="text-emerald-600 text-sm font-semibold mb-2">Desarrollo Frontend</p>
               <div className="flex gap-2">
-                 <a href="#" className="text-emerald-600 hover:underline text-xs">LinkedIn</a>
-                 <a href="#" className="text-emerald-600 hover:underline text-xs">GitHub</a>
+                 <a href="https://www.facebook.com/jhonalexander.lenisholguin.5" className="text-emerald-600 hover:underline text-xs">Facebook</a>
               </div>
             </div>
 
             {/* INTEGRANTE 3 */}
             <div className="flex flex-col items-center p-6 bg-gray-50 rounded-[2rem] border border-emerald-50 shadow-sm">
-              <div className="w-24 h-24 bg-emerald-100 rounded-full mb-4 flex items-center justify-center border-2 border-emerald-500">
-                <span className="text-emerald-700 font-bold italic text-xs">Foto Aquí</span>
+              <div className="w-24 h-24 bg-emerald-100 rounded-full mb-4 flex items-center justify-center border-2 border-emerald-500 overflow-hidden">
+                <Image src={mariana} alt="Mariana" className="w-full h-full object-cover" />
               </div>
-              <h3 className="font-bold text-xl">Integrante 3</h3>
-              <p className="text-emerald-600 text-sm font-semibold mb-2">Backend Developer</p>
+              <h3 className="font-bold text-xl">Mariana Bastidas Quintero</h3>
+              <p className="text-emerald-600 text-sm font-semibold mb-2">Apoyo moral</p>
               <div className="flex gap-2">
-                 <a href="#" className="text-emerald-600 hover:underline text-xs">LinkedIn</a>
-                 <a href="#" className="text-emerald-600 hover:underline text-xs">GitHub</a>
+                 <a href="https://www.facebook.com/mariana.bastidas.376763" className="text-emerald-600 hover:underline text-xs">Facebook</a>
               </div>
             </div>
           </div>
