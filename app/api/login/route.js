@@ -1,20 +1,24 @@
 import db from "@/lib/db";
-import bcrypt from "bcrypt"; // Importante para comparar contraseñas encriptadas
+import bcrypt from "bcrypt";
 
 export async function POST(request) {
     try {
-        const { correo, tipo_documento, numero_documento, password } = await request.json();
+        const body = await request.json();
+        const { correo, tipo_documento, numero_documento, password } = body;
 
-        // 1. Buscamos al usuario por correo y documentos (filtros únicos)
-        // No metemos la password en el WHERE porque está hasheada
+        // LOG DE DEPURACIÓN: Verifica que el frontend está enviando lo que crees
+        console.log("Intentando login para:", { correo, tipo_documento, numero_documento });
+
+        // 1. Buscamos al usuario
         const [rows] = await db.query(
             "SELECT * FROM usuarios WHERE correo = ? AND tipo_documento = ? AND numero_documento = ?", 
             [correo, tipo_documento, numero_documento]
         );
 
-        if (rows.length === 0) {
+        if (!rows || rows.length === 0) {
+            console.log("Resultado: Usuario no encontrado en la DB");
             return new Response(JSON.stringify({ 
-                error: "Usuario no encontrado o datos incorrectos" 
+                error: "Los datos de usuario no coinciden con nuestros registros." 
             }), { 
                 status: 401,
                 headers: { "Content-Type": "application/json" }
@@ -23,11 +27,15 @@ export async function POST(request) {
 
         const user = rows[0];
 
-        // 2. Comparamos la contraseña ingresada con el hash de la base de datos
+        // 2. Comparación de contraseña con manejo de errores
+        // IMPORTANTE: Bcrypt fallará si user.password no es un hash válido
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        
+        console.log("¿Contraseña coincide?:", isPasswordCorrect);
+        console.log("Hash en DB:", user.password);
 
         if (isPasswordCorrect) {
-            // 3. Login exitoso: Quitamos la password del objeto antes de enviar al front
+            // 3. Login exitoso
             const { password: _, ...userWithoutPassword } = user;
 
             return new Response(JSON.stringify({ 
@@ -40,7 +48,7 @@ export async function POST(request) {
         } else {
             // 4. Contraseña incorrecta
             return new Response(JSON.stringify({ 
-                error: "Contraseña incorrecta" 
+                error: "La contraseña ingresada es incorrecta." 
             }), { 
                 status: 401,
                 headers: { "Content-Type": "application/json" }
@@ -48,9 +56,9 @@ export async function POST(request) {
         }
 
     } catch (error) {
-        console.error("Error en el login:", error);
+        console.error("DETALLE DEL ERROR EN LOGIN:", error);
         return new Response(JSON.stringify({ 
-            error: "Error interno del servidor" 
+            error: "Hubo un problema al procesar el ingreso." 
         }), { 
             status: 500,
             headers: { "Content-Type": "application/json" }
